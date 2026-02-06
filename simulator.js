@@ -2,7 +2,7 @@
 // EGIS BID RESPONSE TEAM SIMULATOR
 // ============================================
 
-let GROQ_API_KEY = '';
+let GROQ_API_KEY = 'Egis-Test';
 let scene, camera, renderer;
 let characters = [];
 let roomba;
