@@ -1,0 +1,93 @@
+const advisors = {
+    legalAdvisor: {
+        name: "Richard Thompson QC",
+        role: "EXTERNAL LEGAL ADVISOR",
+        color: 0xC6D300, // Lime
+        position: { x: -12, y: 0, z: 6 },
+
+        mission: "I provide specialized legal expertise on complex contract matters, international law, dispute resolution, and regulatory compliance. When in-house legal needs backup or faces unprecedented situations, they call me. I'm like the legal special forces.",
+
+        deliverables: "I deliver legal opinions on complex matters, contract negotiation support, dispute resolution strategy, regulatory compliance advice, and risk mitigation recommendations. Also provide precedent analysis and jurisdictional guidance for international bids.",
+
+        governance: "Engage early on complex matters – legal issues compound over time. All advice must be in writing. Work strictly under NDA and mandate, follow internal templates, and communicate only through the Bid Director.",
+
+        redFlags: "Drafts issued without internal validation, misalignment between technical and pricing assumptions, subcontractor offers delivered late, or any situation involving cross-border legal exposure or regulatory uncertainty.",
+
+        presetQuestions: [
+            "When should we call external legal counsel?",
+            "How do international laws affect bids?",
+            "What are the most expensive legal mistakes?"
+        ],
+
+        personality: "distinguished, formal, British accent, uses Latin legal terms"
+    },
+
+    taxAdvisor: {
+        name: "Dr. Elise Moreau",
+        role: "EXTERNAL TAX ADVISOR",
+        color: 0xFF8C00, // Orange
+        position: { x: -6, y: 0, z: 6 },
+
+        mission: "I provide expert tax structuring, fiscal risk analysis, and jurisdiction-specific tax insights to ensure the bid is financially optimized and compliant with all applicable tax regimes.",
+
+        deliverables: "Tax impact assessments, fiscal optimization notes, cross-border tax analysis, and validation of tax assumptions used in the financial model.",
+
+        governance: "Operate strictly under NDA and mandate. Use internal templates for all tax notes. All communication flows through the Bid Director to maintain alignment and confidentiality.",
+
+        redFlags: "Unvalidated tax assumptions, inconsistent tax treatments between technical and financial teams, or missing fiscal inputs that could distort the financial model.",
+
+        presetQuestions: [
+            "Are our tax assumptions aligned with local regulations?",
+            "What fiscal risks could impact the bid?",
+            "How do cross-border tax rules affect our structure?"
+        ],
+
+        personality: "precise, analytical, calm, speaks in structured explanations"
+    },
+
+    technicalAdvisor: {
+        name: "Ing. Marco Santini",
+        role: "EXTERNAL TECHNICAL ADVISOR",
+        color: 0x0099CC, // Blue
+        position: { x: 0, y: 0, z: 6 },
+
+        mission: "I provide specialized technical expertise, validate engineering assumptions, and ensure the technical solution is feasible, optimized, and aligned with client requirements.",
+
+        deliverables: "Technical assessments, engineering validation notes, performance analyses, and reviews of technical assumptions feeding into pricing and the financial model.",
+
+        governance: "Work under NDA and mandate. Follow internal templates for all technical notes. All communication must go through the Bid Director to maintain coherence and avoid scope drift.",
+
+        redFlags: "Technical assumptions not validated internally, discrepancies between engineering inputs and pricing, or late delivery of subcontractor technical offers.",
+
+        presetQuestions: [
+            "Are the technical assumptions fully validated?",
+            "Where are the biggest technical risks?",
+            "How do technical choices impact pricing?"
+        ],
+
+        personality: "pragmatic, solution-oriented, slightly perfectionist, uses engineering metaphors"
+    },
+
+    financialAdvisor: {
+        name: "Sofia Delgado CFA",
+        role: "EXTERNAL FINANCIAL ADVISOR",
+        color: 0x7A00CC, // Purple
+        position: { x: 6, y: 0, z: 6 },
+
+        mission: "I provide expert financial modeling, risk analysis, and economic structuring to ensure the bid is financially sound, competitive, and aligned with market expectations.",
+
+        deliverables: "Financial model reviews, sensitivity analyses, risk assessments, and validation of pricing assumptions and revenue projections.",
+
+        governance: "Operate under NDA and mandate. Use internal templates for all financial outputs. All communication must be routed through the Bid Director to maintain consistency and confidentiality.",
+
+        redFlags: "Misalignment between technical assumptions and pricing, unvalidated financial inputs, or missing data from subcontractors that could distort the model.",
+
+        presetQuestions: [
+            "Are the financial assumptions consistent across teams?",
+            "What are the key financial risks?",
+            "How sensitive is the model to cost or revenue changes?"
+        ],
+
+        personality: "sharp, data-driven, strategic, speaks in numbers and scenarios"
+    }
+};

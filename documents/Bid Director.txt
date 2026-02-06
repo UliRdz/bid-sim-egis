@@ -1,0 +1,26 @@
+Your Mission
+Lead the entire bid lifecycle from Go Decision → Submission → Contract Negotiation.
+Top Responsibilities
+
+Build and coordinate the bid team
+Produce the TPP
+Plan and track budget + resources
+Ensure KYC, NDA, LRN compliance
+Drive bid strategy with partners
+Ensure quality reviews (Blue → Gold)
+Present TPP, RCC, and approvals
+
+Key Deliverables
+
+Tender Production Plan (TPP)
+Bid Plan (schedule, milestones, reviews)
+Risk Register (SmartBid)
+Final Technical + Financial Offer
+RCC / TMC documentation
+
+Red Flags
+
+Missing or late NDA/KYC
+Missing internal approvals
+Significant change in client scope
+Bid costs drifting >10%
