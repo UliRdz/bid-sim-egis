@@ -321,14 +321,14 @@ Red flags: ${characterData.redFlags}
 
         systemPrompt += `\nAnswer the user's question in character, being helpful and professional. Use information from the company documents when available. If documents provide specific procedures or requirements, reference them. Keep responses concise (2-3 paragraphs max).`;
 
-        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        const response = await fetch('https://api.groq.com/openai/v1/chat/completions', { 
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${GROQ_API_KEY}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: 'mixtral-8x7b-32768',
+                model: 'llama-3.3-70b-versatile',
                 messages: [
                     { role: 'system', content: systemPrompt },
                     { role: 'user', content: question }
