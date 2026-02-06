@@ -292,14 +292,14 @@ function createLogoFrames(officeWidth, officeDepth, wallHeight) {
 
     // Logo file paths
     const logoFiles = [
-        'assets/logo-1.png',
-        'assets/logo-2.png',
-        'assets/logo-3.png',
-        'assets/logo-4.png',
-        'assets/logo-5.png',
-        'assets/logo-6.png',
-        'assets/logo-7.jpg',
-        'assets/logo-8.jpg'
+        './assets/logo-1.png',
+        './assets/logo-2.png',
+        './assets/logo-3.png',
+        './assets/logo-4.png',
+        './assets/logo-5.png',
+        './assets/logo-6.png',
+        './assets/logo-7.jpg',
+        './assets/logo-8.jpg'
     ];
 
     let logoIndex = 0;
@@ -1519,7 +1519,7 @@ const logoLeft = document.getElementById('logo-left');
 const logoRight = document.getElementById('logo-right');
 
 const logoLeftImg = new Image();
-logoLeftImg.src = 'assets/logo-left.png';
+logoLeftImg.src = './assets/logo-left.png';
 logoLeftImg.onload = () => {
     logoLeft.innerHTML = '';
     logoLeft.appendChild(logoLeftImg);
@@ -1528,7 +1528,7 @@ logoLeftImg.onload = () => {
 };
 
 const logoRightImg = new Image();
-logoRightImg.src = 'assets/logo-right.png';
+logoRightImg.src = './assets/logo-right.png';
 logoRightImg.onload = () => {
     logoRight.innerHTML = '';
     logoRight.appendChild(logoRightImg);
