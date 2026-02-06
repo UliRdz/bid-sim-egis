@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EGIS Bid Response Team Simulator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --egis-orange: #F4A300;
+            --egis-teal: #007C91;
+            --egis-white: #FFFFFF;
+            --egis-lime: #C6D300;
+            --egis-navy: #0F2A3D;
+            --egis-black: #000000;
+            
+            /* Light theme backgrounds */
+            --bg-primary: #F8F9FA;
+            --bg-secondary: #E8F4F8;
+            --bg-accent: #FFF9E6;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            background: var(--bg-primary);
+            color: var(--egis-black);
+        }
+
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            cursor: none;
+        }
+
+        #canvas-container.pointer-locked {
+            cursor: none;
+        }
+
+        /* Welcome Screen */
+        #welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        #welcome-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .welcome-content {
+            max-width: 900px;
+            padding: 60px;
+            background: var(--egis-white);
+            border: 4px solid var(--egis-orange);
+            border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(0, 124, 145, 0.15);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .welcome-content::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .welcome-content::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 5px;
+        }
+
+        .welcome-content::-webkit-scrollbar-thumb {
+            background: var(--egis-teal);
+            border-radius: 5px;
+        }
+
+        .welcome-content::-webkit-scrollbar-thumb:hover {
+            background: var(--egis-orange);
+        }
+
+        @media (max-width: 768px) {
+            .welcome-content {
+                padding: 30px;
+                max-width: 95vw;
+            }
+
+            .logo-header {
+                flex-direction: column;
+            }
+
+            .welcome-title {
+                font-size: 32px;
+            }
+        }
+
+        .logo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            gap: 30px;
+        }
+
+        .logo-container {
+            width: 120px;
+            height: 120px;
+            background: var(--bg-secondary);
+            border: 3px solid var(--egis-teal);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: var(--egis-navy);
+            font-size: 12px;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .logo-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .welcome-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--egis-navy);
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            flex: 1;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .welcome-title .highlight {
+            color: var(--egis-lime);
+        }
+
+        .welcome-message {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: var(--egis-black);
+        }
+
+        .welcome-message strong {
+            color: var(--egis-teal);
+            font-weight: 600;
+        }
+
+        .api-input-group {
+            margin: 30px 0;
+        }
+
+        .api-input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--egis-navy);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .api-input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--egis-teal);
+            color: var(--egis-black);
+            font-family: 'Inter', monospace;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .api-input-group input:focus {
+            outline: none;
+            border-color: var(--egis-orange);
+            background: var(--egis-white);
+            box-shadow: 0 0 20px rgba(244, 163, 0, 0.2);
+        }
+
+        .start-button {
+            width: 100%;
+            padding: 20px;
+            background: var(--egis-orange);
+            color: var(--egis-white);
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(244, 163, 0, 0.3);
+        }
+
+        .start-button:hover {
+            background: var(--egis-teal);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 124, 145, 0.4);
+        }
+
+        .start-button:disabled {
+            background: #ccc;
+            color: #888;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .instructions {
+            margin-top: 30px;
+            padding: 25px;
+            background: var(--bg-accent);
+            border-left: 4px solid var(--egis-lime);
+            border-radius: 10px;
+        }
+
+        .instructions h3 {
+            color: var(--egis-navy);
+            margin-bottom: 15px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+        }
+
+        .instructions ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .instructions li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+            color: var(--egis-black);
+        }
+
+        .instructions li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--egis-orange);
+            font-size: 18px;
+        }
+
+        /* HUD */
+        #hud {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 30px;
+            border: 3px solid var(--egis-teal);
+            border-left: 6px solid var(--egis-orange);
+            font-size: 14px;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+        }
+
+        #hud h3 {
+            color: var(--egis-navy);
+            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        #hud p {
+            margin: 5px 0;
+            color: var(--egis-black);
+        }
+
+        #hud strong {
+            color: var(--egis-teal);
+        }
+
+        #nearby-character {
+            color: var(--egis-orange);
+            font-weight: 600;
+        }
+
+        /* Dialog Box */
+        #dialog-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--egis-white);
+            border: 4px solid var(--egis-orange);
+            padding: 40px;
+            max-width: min(700px, 90vw);
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+            border-radius: 20px;
+        }
+
+        #dialog-box::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        #dialog-box::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 5px;
+        }
+
+        #dialog-box::-webkit-scrollbar-thumb {
+            background: var(--egis-teal);
+            border-radius: 5px;
+        }
+
+        #dialog-box::-webkit-scrollbar-thumb:hover {
+            background: var(--egis-orange);
+        }
+
+        #dialog-box.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        /* Responsive dialog for smaller screens */
+        @media (max-width: 768px) {
+            #dialog-box {
+                padding: 20px;
+                max-width: 95vw;
+                max-height: 90vh;
+            }
+
+            .dialog-title {
+                font-size: 22px;
+            }
+
+            .dialog-section h4 {
+                font-size: 16px;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -40%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .dialog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 25px;
+            border-bottom: 3px solid var(--egis-teal);
+            padding-bottom: 20px;
+        }
+
+        .dialog-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--egis-navy);
+            text-transform: uppercase;
+        }
+
+        .dialog-role {
+            font-size: 12px;
+            color: var(--egis-teal);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        .close-dialog {
+            background: var(--egis-orange);
+            border: none;
+            color: var(--egis-white);
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            font-weight: 700;
+        }
+
+        .close-dialog:hover {
+            background: var(--egis-teal);
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .dialog-content {
+            color: var(--egis-black);
+            line-height: 1.8;
+        }
+
+        .dialog-section {
+            margin-bottom: 25px;
+        }
+
+        .dialog-section h4 {
+            color: var(--egis-navy);
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dialog-section p {
+            margin-bottom: 10px;
+        }
+
+        .preset-questions {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid var(--bg-secondary);
+        }
+
+        .preset-questions h5 {
+            color: var(--egis-navy);
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .question-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--egis-teal);
+            color: var(--egis-black);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .question-btn:hover {
+            background: var(--egis-teal);
+            color: var(--egis-white);
+            transform: translateX(5px);
+        }
+
+        .ai-input-group {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 3px solid var(--egis-orange);
+        }
+
+        .ai-input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--egis-navy);
+            font-weight: 600;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .ai-input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--egis-teal);
+            color: var(--egis-black);
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .ai-input-group input:focus {
+            outline: none;
+            border-color: var(--egis-orange);
+            background: var(--egis-white);
+        }
+
+        .ai-input-group button {
+            padding: 12px 30px;
+            background: var(--egis-orange);
+            color: var(--egis-white);
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .ai-input-group button:hover {
+            background: var(--egis-teal);
+            transform: translateY(-2px);
+        }
+
+        .ai-response {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--bg-accent);
+            border-left: 4px solid var(--egis-lime);
+            font-style: italic;
+            border-radius: 8px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(244, 163, 0, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--egis-orange);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Crosshair */
+        #crosshair {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.7;
+        }
+
+        #crosshair::before,
+        #crosshair::after {
+            content: '';
+            position: absolute;
+            background: var(--egis-orange);
+        }
+
+        #crosshair::before {
+            top: 50%;
+            left: 5px;
+            width: 20px;
+            height: 3px;
+            transform: translateY(-50%);
+        }
+
+        #crosshair::after {
+            left: 50%;
+            top: 5px;
+            width: 3px;
+            height: 20px;
+            transform: translateX(-50%);
+        }
+
+        #crosshair.interact {
+            filter: drop-shadow(0 0 15px var(--egis-lime));
+        }
+
+        #crosshair.interact::before,
+        #crosshair.interact::after {
+            background: var(--egis-lime);
+        }
+
+        /* Event Toast */
+        #event-toast {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: var(--egis-white);
+            border: 3px solid var(--egis-lime);
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            z-index: 90;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            max-width: 350px;
+        }
+
+        #event-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #event-toast h4 {
+            color: var(--egis-navy);
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        #event-toast p {
+            color: var(--egis-black);
+            font-size: 14px;
+        }
+
+        /* Dance Indicator */
+        #dance-indicator {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--egis-lime);
+            color: var(--egis-navy);
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            box-shadow: 0 10px 30px rgba(198, 211, 0, 0.4);
+            display: none;
+            animation: bounce 0.5s ease infinite;
+        }
+
+        #dance-indicator.show {
+            display: block;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Click to Start */
+        #click-to-start {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--egis-white);
+            border: 4px solid var(--egis-orange);
+            padding: 30px 50px;
+            border-radius: 20px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--egis-navy);
+            cursor: pointer;
+            z-index: 80;
+            display: none;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        #click-to-start:hover {
+            background: var(--egis-orange);
+            color: var(--egis-white);
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+
+        #click-to-start.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome-screen">
+        <div class="welcome-content">
+            <div class="logo-header">
+                <div class="logo-container" id="logo-left">
+                    LOGO LEFT
+                </div>
+                <h1 class="welcome-title">
+                    <span class="highlight">EGIS</span><br>
+                    Bid Team Simulator
+                </h1>
+                <div class="logo-container" id="logo-right">
+                    LOGO RIGHT
+                </div>
+            </div>
+
+            <div class="welcome-message">
+                <!-- ⚠️ CUSTOMIZABLE WELCOME MESSAGE - EDIT BELOW ⚠️ -->
+                <p><strong>Welcome to the EGIS Bid Response Team Simulator!</strong></p>
+                <p>This interactive 3D environment will help you understand the roles, responsibilities, and workflows of our bid response team. Walk through our virtual office, meet key team members, and learn about the critical processes that drive successful bids.</p>
+                <p>Each team member will share their mission, deliverables, governance rules, and red flags to watch for. Use this simulator to train new team members or refresh your knowledge of our bid response procedures.</p>
+                <!-- ⚠️ END CUSTOMIZABLE WELCOME MESSAGE ⚠️ -->
+            </div>
+
+            <div class="api-input-group">
+                <label for="groq-api-key">Groq API Key (Required for AI Conversations)</label>
+                <input 
+                    type="password" 
+                    id="groq-api-key" 
+                    placeholder="Enter your Groq API key (gsk_...)"
+                >
+            </div>
+
+            <button class="start-button" id="start-button" disabled>
+                Enter Office 🚀
+            </button>
+
+            <div class="instructions">
+                <h3>🎮 Controls & Instructions</h3>
+                <ul>
+                    <li><strong>Z/Q/S/D</strong> - Move forward/left/backward/right</li>
+                    <li><strong>Arrow Keys or Mouse</strong> - Look around</li>
+                    <li><strong>E</strong> - Interact with team members</li>
+                    <li><strong>SPACE</strong> - Dance! 💃</li>
+                    <li><strong>ESC</strong> - Close dialogs / Release mouse</li>
+                    <li>Click on the screen to lock mouse for looking around</li>
+                    <li>Ask preset questions or type your own custom questions</li>
+                    <li>Watch out for the Roomba - it might follow you!</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Canvas Container -->
+    <div id="canvas-container"></div>
+
+    <!-- HUD -->
+    <div id="hud">
+        <h3>Navigation</h3>
+        <p><strong>Z/Q/S/D:</strong> Move</p>
+        <p><strong>Arrows/Mouse:</strong> Look</p>
+        <p><strong>E:</strong> Interact</p>
+        <p><strong>SPACE:</strong> Dance</p>
+        <p id="nearby-character"></p>
+    </div>
+
+    <!-- Crosshair -->
+    <div id="crosshair"></div>
+
+    <!-- Event Toast -->
+    <div id="event-toast">
+        <h4 id="toast-title"></h4>
+        <p id="toast-message"></p>
+    </div>
+
+    <!-- Dance Indicator -->
+    <div id="dance-indicator">🕺 DANCING! 💃</div>
+
+    <!-- Click to Start -->
+    <div id="click-to-start">
+        Click to Look Around
+    </div>
+
+    <!-- Dialog Box -->
+    <div id="dialog-box">
+        <div class="dialog-header">
+            <div>
+                <div class="dialog-title" id="dialog-character-name"></div>
+                <div class="dialog-role" id="dialog-character-role"></div>
+            </div>
+            <button class="close-dialog" id="close-dialog">×</button>
+        </div>
+        <div class="dialog-content" id="dialog-content"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="rag-system.js"></script>
+    <script src="character-data.js"></script>
+    <script src="simulator.js"></script>
+</body>
+</html>
